@@ -1,63 +1,124 @@
 local NewIDLib = {}
 
--- Create a new frame
-function NewIDLib.Frame(p, s, pos, col)
-    local f = Instance.new("Frame")
-    f.Size = s or UDim2.new(0, 200, 0, 100)
-    f.Position = pos or UDim2.new(0, 0, 0, 0)
-    f.BackgroundColor3 = col or Color3.new(1, 1, 1)
-    f.Parent = p
-    return f
+local function createBaseInstance(instanceType, parent, properties)
+    local instance = Instance.new(instanceType)
+    for prop, value in pairs(properties) do
+        instance[prop] = value
+    end
+    instance.Parent = parent
+    return instance
 end
 
--- Create a new button
+-- Function to create a rounded corner frame
+local function createRoundedFrame(parent, size, position, color, cornerRadius)
+    local frame = createBaseInstance("Frame", parent, {
+        Size = size or UDim2.new(0, 200, 0, 100),
+        Position = position or UDim2.new(0, 0, 0, 0),
+        BackgroundColor3 = color or Color3.new(1, 1, 1),
+        BackgroundTransparency = 0.2,
+    })
+
+    local corner = createBaseInstance("UICorner", frame, {
+        CornerRadius = UDim.new(0, cornerRadius or 12)
+    })
+
+    return frame
+end
+
+-- Create a new frame
+function NewIDLib.Frame(p, s, pos, col)
+    return createRoundedFrame(p, s, pos, col, 12)
+end
+
+-- Create a new button with hover effect
 function NewIDLib.Button(p, text, s, pos, callback)
-    local b = Instance.new("TextButton")
-    b.Size = s or UDim2.new(0, 100, 0, 50)
-    b.Position = pos or UDim2.new(0, 0, 0, 0)
-    b.Text = text or "Button"
-    b.BackgroundColor3 = Color3.new(0, 0.5, 1)
-    b.TextColor3 = Color3.new(1, 1, 1)
-    b.Parent = p
+    local b = createBaseInstance("TextButton", p, {
+        Size = s or UDim2.new(0, 100, 0, 50),
+        Position = pos or UDim2.new(0, 0, 0, 0),
+        Text = text or "Button",
+        BackgroundColor3 = Color3.new(0, 0.5, 1),
+        TextColor3 = Color3.new(1, 1, 1),
+        TextSize = 18,
+        Font = Enum.Font.GothamBold,
+        BackgroundTransparency = 0,
+        AutoButtonColor = false,
+        ZIndex = 2
+    })
+
+    b.MouseEnter:Connect(function()
+        b.BackgroundColor3 = Color3.new(0, 0.7, 1)
+    end)
+
+    b.MouseLeave:Connect(function()
+        b.BackgroundColor3 = Color3.new(0, 0.5, 1)
+    end)
+
     b.MouseButton1Click:Connect(callback or function() end)
+
     return b
 end
 
 -- Create an image button
 function NewIDLib.ImageButton(p, imgUrl, s, pos, callback)
-    local b = Instance.new("ImageButton")
-    b.Size = s or UDim2.new(0, 100, 0, 50)
-    b.Position = pos or UDim2.new(0, 0, 0, 0)
-    b.Image = imgUrl or ""
-    b.BackgroundColor3 = Color3.new(1, 1, 1)
-    b.Parent = p
+    local b = createBaseInstance("ImageButton", p, {
+        Size = s or UDim2.new(0, 100, 0, 50),
+        Position = pos or UDim2.new(0, 0, 0, 0),
+        Image = imgUrl or "",
+        BackgroundColor3 = Color3.new(1, 1, 1),
+        BackgroundTransparency = 0,
+        ZIndex = 2
+    })
+
+    b.MouseEnter:Connect(function()
+        b.BackgroundColor3 = Color3.new(0.9, 0.9, 0.9)
+    end)
+
+    b.MouseLeave:Connect(function()
+        b.BackgroundColor3 = Color3.new(1, 1, 1)
+    end)
+
     b.MouseButton1Click:Connect(callback or function() end)
+
     return b
 end
 
 -- Create a new label
 function NewIDLib.Label(p, text, s, pos, textSize, textColor)
-    local l = Instance.new("TextLabel")
-    l.Size = s or UDim2.new(0, 200, 0, 50)
-    l.Position = pos or UDim2.new(0, 0, 0, 0)
-    l.Text = text or "Label"
-    l.BackgroundColor3 = Color3.new(1, 1, 1)
-    l.TextColor3 = textColor or Color3.new(0, 0, 0)
-    l.TextSize = textSize or 14
-    l.Parent = p
+    local l = createBaseInstance("TextLabel", p, {
+        Size = s or UDim2.new(0, 200, 0, 50),
+        Position = pos or UDim2.new(0, 0, 0, 0),
+        Text = text or "Label",
+        BackgroundColor3 = Color3.new(1, 1, 1),
+        BackgroundTransparency = 1,
+        TextColor3 = textColor or Color3.new(0, 0, 0),
+        TextSize = textSize or 18,
+        Font = Enum.Font.Gotham,
+        TextStrokeTransparency = 0.5,
+        ZIndex = 2
+    })
+
     return l
 end
 
 -- Create a new textbox
 function NewIDLib.TextBox(p, placeholder, s, pos, multiLine)
-    local tb = Instance.new("TextBox")
-    tb.Size = s or UDim2.new(0, 200, 0, 50)
-    tb.Position = pos or UDim2.new(0, 0, 0, 0)
-    tb.PlaceholderText = placeholder or "Enter text..."
-    tb.BackgroundColor3 = Color3.new(1, 1, 1)
-    tb.TextColor3 = Color3.new(0, 0, 0)
-    tb.MultiLine = multiLine or false
-    tb.Parent = p
+    local tb = createBaseInstance("TextBox", p, {
+        Size = s or UDim2.new(0, 200, 0, 50),
+        Position = pos or UDim2.new(0, 0, 0, 0),
+        PlaceholderText = placeholder or "Enter text...",
+        BackgroundColor3 = Color3.new(1, 1, 1),
+        TextColor3 = Color3.new(0, 0, 0),
+        MultiLine = multiLine or false,
+        TextSize = 16,
+        Font = Enum.Font.Gotham,
+        ZIndex = 2,
+        BackgroundTransparency = 0.2,
+    })
+
+    local corner = createBaseInstance("UICorner", tb, {
+        CornerRadius = UDim.new(0, 12)
+    })
+
     return tb
 end
 
@@ -68,19 +129,13 @@ end
 
 -- Create a new dropdown
 function NewIDLib.Dropdown(p, options, pos)
-    local d = Instance.new("Frame")
-    d.Size = UDim2.new(0, 200, 0, 50)
-    d.Position = pos or UDim2.new(0, 0, 0, 0)
-    d.BackgroundColor3 = Color3.new(1, 1, 1)
-    d.Parent = p
+    local d = createRoundedFrame(p, UDim2.new(0, 200, 0, 50), pos, Color3.new(1, 1, 1), 12)
+    local btn = NewIDLib.Button(d, "Select", UDim2.new(1, 0, 0, 25), UDim2.new(0, 0, 0, 0), function()
+        optionsFrame.Visible = not optionsFrame.Visible
+    end)
 
-    local btn = NewIDLib.Button(d, "Select", UDim2.new(1, 0, 0, 25), UDim2.new(0, 0, 0, 0))
-    local optionsFrame = Instance.new("Frame")
-    optionsFrame.Size = UDim2.new(1, 0, 0, #options * 25)
-    optionsFrame.Position = UDim2.new(0, 0, 0, 25)
-    optionsFrame.BackgroundColor3 = Color3.new(1, 1, 1)
+    local optionsFrame = createRoundedFrame(d, UDim2.new(1, 0, 0, #options * 25), UDim2.new(0, 0, 0, 25), Color3.new(1, 1, 1), 12)
     optionsFrame.Visible = false
-    optionsFrame.Parent = d
 
     for i, option in ipairs(options) do
         NewIDLib.Button(optionsFrame, option, UDim2.new(1, 0, 0, 25), UDim2.new(0, 0, (i - 1), 0), function()
@@ -89,25 +144,18 @@ function NewIDLib.Dropdown(p, options, pos)
         end)
     end
 
-    btn.MouseButton1Click:Connect(function()
-        optionsFrame.Visible = not optionsFrame.Visible
-    end)
-
     return d
 end
 
 -- Create a progress bar
 function NewIDLib.ProgressBar(p, size, pos)
-    local bar = Instance.new("Frame")
-    bar.Size = size or UDim2.new(0, 200, 0, 25)
-    bar.Position = pos or UDim2.new(0, 0, 0, 0)
-    bar.BackgroundColor3 = Color3.new(1, 1, 1)
-    bar.Parent = p
+    local bar = createRoundedFrame(p, size or UDim2.new(0, 200, 0, 25), pos, Color3.new(0.5, 0.5, 0.5), 12)
 
-    local fill = Instance.new("Frame")
-    fill.Size = UDim2.new(0, 0, 1, 0)
-    fill.BackgroundColor3 = Color3.new(0, 0.7, 0)
-    fill.Parent = bar
+    local fill = createBaseInstance("Frame", bar, {
+        Size = UDim2.new(0, 0, 1, 0),
+        BackgroundColor3 = Color3.new(0, 0.7, 0),
+        ZIndex = 1
+    })
 
     function bar:SetProgress(value)
         fill.Size = UDim2.new(value, 0, 1, 0)
@@ -118,17 +166,14 @@ end
 
 -- Create a slider
 function NewIDLib.Slider(p, min, max, size, pos, callback)
-    local s = Instance.new("Frame")
-    s.Size = size or UDim2.new(0, 200, 0, 50)
-    s.Position = pos or UDim2.new(0, 0, 0, 0)
-    s.BackgroundColor3 = Color3.new(1, 1, 1)
-    s.Parent = p
+    local s = createRoundedFrame(p, size or UDim2.new(0, 200, 0, 50), pos, Color3.new(1, 1, 1), 12)
 
-    local slider = Instance.new("TextButton")
-    slider.Size = UDim2.new(0, 20, 1, 0)
-    slider.Position = UDim2.new(0, 0, 0, 0)
-    slider.BackgroundColor3 = Color3.new(0, 0.5, 1)
-    slider.Parent = s
+    local slider = createBaseInstance("TextButton", s, {
+        Size = UDim2.new(0, 20, 1, 0),
+        Position = UDim2.new(0, 0, 0, 0),
+        BackgroundColor3 = Color3.new(0, 0.5, 1),
+        ZIndex = 2
+    })
 
     local function updateValue()
         local value = math.floor((slider.Position.X.Offset / s.Size.X.Offset) * (max - min) + min)
@@ -158,17 +203,25 @@ end
 
 -- Create a toggle switch
 function NewIDLib.Toggle(p, text, size, pos, callback)
-    local t = Instance.new("Frame")
-    t.Size = size or UDim2.new(0, 100, 0, 50)
-    t.Position = pos or UDim2.new(0, 0, 0, 0)
-    t.BackgroundColor3 = Color3.new(1, 1, 1)
-    t.Parent = p
-
-    local btn = NewIDLib.Button(t, text or "Toggle", UDim2.new(1, 0, 0, 25), UDim2.new(0, 0, 0, 0), function()
-        callback(not t:GetAttribute("toggled"))
+    local t = createRoundedFrame(p, size or UDim2.new(0, 100, 0, 50), pos, Color3.new(1, 1, 1), 12)
+    
+    local switch = createBaseInstance("TextButton", t, {
+        Size = UDim2.new(0, 50, 1, 0),
+        Position = UDim2.new(0, 0, 0, 0),
+        BackgroundColor3 = Color3.new(0.5, 0.5, 0.5),
+        Text = "",
+        ZIndex = 2
+    })
+    
+    local label = NewIDLib.Label(t, text, UDim2.new(0, 100, 1, 0), UDim2.new(0, 60, 0, 0), 16, Color3.new(0, 0, 0))
+    
+    local isToggled = false
+    
+    switch.MouseButton1Click:Connect(function()
+        isToggled = not isToggled
+        switch.BackgroundColor3 = isToggled and Color3.new(0, 0.7, 0) or Color3.new(0.5, 0.5, 0.5)
+        callback(isToggled)
     end)
-
-    t:SetAttribute("toggled", false)
 
     return t
 end
