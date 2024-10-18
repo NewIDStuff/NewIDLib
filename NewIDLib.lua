@@ -32,11 +32,40 @@ function NewIDLib.Frame.New()
 
     print("Frame created:", frame)  -- Debug print to check frame creation
 
+    -- Make frame draggable
+    local dragging, dragInput, startPos, startFramePos
+    frame.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true
+            startPos = input.Position
+            startFramePos = frame.Position
+
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
+
+    frame.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement then
+            dragInput = input
+        end
+    end)
+
+    game:GetService("UserInputService").InputChanged:Connect(function(input)
+        if input == dragInput and dragging then
+            local delta = input.Position - startPos
+            frame.Position = UDim2.new(startFramePos.X.Scale, startFramePos.X.Offset + delta.X, startFramePos.Y.Scale, startFramePos.Y.Offset + delta.Y)
+        end
+    end)
+
     return frame
 end
 
 -- Create a button that toggles a function on and off
-function NewIDLib.Button.New(text, toggleFunction)
+function NewIDLib.Button.New(text, toggleFunction, parentFrame)
     local button = Instance.new("TextButton")
     button.Size = UDim2.new(0, 200, 0, 50)  -- Size of the button
     button.Position = UDim2.new(0.5, -100, 0.5, -25) -- Centered in the frame
@@ -59,7 +88,7 @@ function NewIDLib.Button.New(text, toggleFunction)
     uiStroke.Thickness = 2
     uiStroke.Parent = button
 
-    button.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui"):FindFirstChildOfClass("ScreenGui") -- Parent it to the ScreenGui
+    button.Parent = parentFrame -- Parent it to the specified frame
 
     local isActive = false -- State of the toggle
 
