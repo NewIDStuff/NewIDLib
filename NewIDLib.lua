@@ -6,8 +6,12 @@ function NewIDLib.Frame.New()
     local frame = Instance.new("Frame")
     frame.Size = UDim2.new(0, 200, 0, 100)
     frame.BackgroundColor3 = Color3.new(0, 0, 0) -- Black color
-    frame.Position = UDim2.new(0.5, -100, 0.5, -50)
+    frame.Position = UDim2.new(0, 100, 0, 100) -- Move to a visible position
+    frame.ZIndex = 10 -- Ensure it's on top
+    frame.Visible = true -- Make sure it's visible
     frame.Parent = game.Players.LocalPlayer.PlayerGui
+
+    print("Frame created:", frame)  -- Debug print to check frame creation
 
     -- Make the frame draggable
     local dragging
