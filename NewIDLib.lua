@@ -13,19 +13,6 @@ end
 
 -- Function to create a new draggable frame
 function Library.Frame.New()
-    -- Create a label
-    local label = Instance.new("TextLabel")
-    label.Size = UDim2.new(0, 200, 0, 50)
-    label.Position = UDim2.new(0.5, -100, 0.5, -25)
-    label.BackgroundTransparency = 1
-    label.Text = "NewID Library"
-    label.TextColor3 = Color3.new(0.9, 0.9, 0.9)  -- Light gray text for visibility
-    label.TextScaled = true
-    label.Parent = Library.UI
-
-    -- Fade out the label slowly
-    Library:FadeOutLabel(label)
-
     -- Create a new Frame instance
     local frame = Instance.new("Frame")
     frame.Size = UDim2.new(0, 600, 0, 400)  -- Thicker rectangle frame
@@ -35,7 +22,20 @@ function Library.Frame.New()
     frame.Draggable = true
     frame.Parent = Library.UI  -- Parent the frame to the UI
 
-    return frame  -- Optionally return the frame for further customization
+    -- Create a label
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.new(1, 0, 0, 50)  -- Full width of the frame
+    label.Position = UDim2.new(0, 0, 0, 10)  -- Top padding
+    label.BackgroundTransparency = 1
+    label.Text = "NewID Library"
+    label.TextColor3 = Color3.new(0.9, 0.9, 0.9)  -- Light gray text for visibility
+    label.TextScaled = true
+    label.Parent = frame  -- Parent the label to the frame
+
+    -- Fade out the label slowly
+    Library:FadeOutLabel(label)
+
+    return frame  -- Return the frame for further customization
 end
 
 -- Function to fade out the label
@@ -47,32 +47,21 @@ function Library:FadeOutLabel(label)
     label:Destroy()  -- Destroy the label after fading out
 end
 
--- Function to create a new toggle button
-function Library.Button.New(buttonText, toggleFunction)
+-- Function to create a new button
+function Library.Button.New(buttonText, onClickFunction)
     local button = Instance.new("TextButton")
     button.Size = UDim2.new(0, 150, 0, 40)  -- Button size
-    button.Position = UDim2.new(0, 10, 0.5, -20)  -- Positioned on the left side
-    button.BackgroundColor3 = Color3.fromRGB(100, 100, 100)  -- Button color
+    button.Position = UDim2.new(0, 20, 0.1, 0)  -- Positioned inside the frame
+    button.BackgroundColor3 = Color3.fromRGB(70, 70, 70)  -- Darker button color
     button.TextColor3 = Color3.new(1, 1, 1)  -- White text
-    button.Text = buttonText or "Toggle"  -- Button text
+    button.Text = buttonText or "Button"  -- Button text
     button.TextScaled = true
-    button.Parent = Library.UI  -- Parent the button to the UI
-
-    local toggled = false  -- State of the toggle
+    button.Parent = Library.UI:FindFirstChildOfClass("Frame")  -- Parent the button to the frame
 
     -- Function to handle button clicks
     button.MouseButton1Click:Connect(function()
-        toggled = not toggled  -- Toggle the state
-
-        if toggleFunction and type(toggleFunction) == "function" then
-            toggleFunction(toggled)  -- Call the custom function with the toggled state
-        end
-
-        -- Optionally change the button color based on toggle state
-        if toggled then
-            button.BackgroundColor3 = Color3.fromRGB(0, 255, 0)  -- Green when on
-        else
-            button.BackgroundColor3 = Color3.fromRGB(255, 0, 0)  -- Red when off
+        if onClickFunction then
+            onClickFunction()  -- Call the provided function when clicked
         end
     end)
 
