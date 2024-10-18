@@ -2,50 +2,54 @@
 
 local Library = {}
 Library.UI = Instance.new("ScreenGui")
-Library.Frame = Instance.new("Frame")
-Library.Label = Instance.new("TextLabel")
+Library.Frame = {}
 
--- Function to initialize the library
+-- Initialize the UI
 function Library:Init()
     self.UI.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-
-    -- Set up the frame properties
-    self.Frame.Size = UDim2.new(0, 400, 0, 300)
-    self.Frame.Position = UDim2.new(0.5, -200, 0.5, -150)
-    self.Frame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    self.Frame.Active = true
-    self.Frame.Draggable = true
-    self.Frame.Parent = self.UI
+    return self
 end
 
--- Function to create a new frame
+-- Function to create a new draggable frame
 function Library.Frame.New()
-    -- Set up the label
-    Library.Label.Size = UDim2.new(0, 200, 0, 50)
-    Library.Label.Position = UDim2.new(0.5, -100, 0.5, -25)
-    Library.Label.BackgroundTransparency = 1
-    Library.Label.Text = "NewID Library"
-    Library.Label.TextColor3 = Color3.new(1, 1, 1)
-    Library.Label.TextScaled = true
-    Library.Label.Parent = Library.UI
+    -- Create a new Frame instance
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(0, 400, 0, 300)
+    frame.Position = UDim2.new(0.5, -200, 0.5, -150)
+    frame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    frame.Active = true
+    frame.Draggable = true
+    frame.Parent = Library.UI  -- Parent the frame to the UI
+
+    -- Create a label
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.new(0, 200, 0, 50)
+    label.Position = UDim2.new(0.5, -100, 0.5, -25)
+    label.BackgroundTransparency = 1
+    label.Text = "NewID Library"
+    label.TextColor3 = Color3.new(1, 1, 1)
+    label.TextScaled = true
+    label.Parent = Library.UI
 
     -- Fade out the label
-    Library:FadeOutLabel()
+    Library:FadeOutLabel(label)
 
-    -- Show the frame after label fades out
-    Library.Frame.Parent = Library.UI
+    return frame  -- Optionally return the frame for further customization
 end
 
 -- Function to fade out the label
-function Library:FadeOutLabel()
+function Library:FadeOutLabel(label)
     for i = 0, 1, 0.1 do
         wait(0.05)
-        self.Label.TextTransparency = i
+        label.TextTransparency = i
     end
-    self.Label:Destroy()  -- Optionally destroy the label after fading out
+    label:Destroy()  -- Optionally destroy the label after fading out
 end
 
 -- Initialize the library when loaded
 Library:Init()
+
+-- Expose the Frame object
+Library.Frame.New = Library.Frame.New
 
 return Library
