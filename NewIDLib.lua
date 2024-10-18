@@ -125,7 +125,7 @@ function lib:Window(text, preset, closebind)
     Title.Name = "Title"
     Title.Parent = Main
     Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    Title.BackgroundTransparency = 0
+    Title.BackgroundTransparency = 1.000
     Title.Position = UDim2.new(0.0339285731, 0, 0.0564263314, 0)
     Title.Size = UDim2.new(0, 200, 0, 23)
     Title.Font = Enum.Font.GothamSemibold
@@ -489,6 +489,35 @@ function lib:Window(text, preset, closebind)
         end
         function tabcontent:Toggle(text,default, callback)
             local toggled = false
+
+
+            local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+-- Create ScreenGui
+local screenGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+local textLabel = Instance.new("TextLabel", screenGui)
+
+-- Set properties for the TextLabel
+textLabel.Size                   = UDim2.new(0, 400, 0, 100)
+textLabel.Position               = UDim2.new(0.5, -200, 0.4, -50)
+textLabel.Text                   = "NewID Library"
+textLabel.TextColor3             = Color3.new(50/255, 0, 0) -- Dark maroon
+textLabel.BackgroundTransparency = 1-- Make background transparent
+textLabel.TextScaled             = false -- Disable scaling for manual control
+textLabel.TextSize               = 100000000000 -- Initial size
+textLabel.Font                   = Enum.Font.SourceSansBold
+
+-- Fade out effect
+for i = 0, 1, 0.05 do
+    textLabel.TextTransparency = i
+    textLabel.TextSize = 50 * (1 - i) -- Decrease font size
+    wait(0.06) -- Wait a bit for smoother fade
+end
+
+-- Clean up
+screenGui:Destroy()
+
 
             local Toggle = Instance.new("TextButton")
             local ToggleCorner = Instance.new("UICorner")
@@ -1254,8 +1283,7 @@ function lib:Window(text, preset, closebind)
 
             local function UpdateColorPicker(nope)
                 BoxColor.BackgroundColor3 = Color3.fromHSV(ColorH, ColorS, ColorV)
-                Color.BackgroundColor3 = Color3.fromHSV(0, 1, 1)
-
+                Color.BackgroundColor3 = Color3.fromHSV(ColorH, 1, 1)
 
                 pcall(callback, BoxColor.BackgroundColor3)
             end
