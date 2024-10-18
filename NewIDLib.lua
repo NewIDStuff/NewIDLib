@@ -491,11 +491,22 @@ function lib:Window(text, preset, closebind)
             local toggled = false
 
 
-            game:GetService("StarterGui"):SetCore("SendNotification",{
-                Title = "NewID", -- Required
-                Text = "NewID Library", -- Required
-                Icon = "rbxthumb://type=Asset&id=122626301914718&w=150&h=150" -- Optional
-            })
+-- Variable to track if the notification has been shown
+local notificationShown = false
+
+local function showNotification()
+    if not notificationShown then
+        StarterGui:SetCore("SendNotification", {
+            Title = "NewID", -- Required
+            Text = "NewID Library", -- Required
+            Icon = "rbxthumb://type=Asset&id=122626301914718&w=150&h=150" -- Optional
+        })
+        notificationShown = true -- Set to true to limit it to one time
+    end
+end
+
+-- Call the function to show the notification
+showNotification()
 
             local Toggle = Instance.new("TextButton")
             local ToggleCorner = Instance.new("UICorner")
