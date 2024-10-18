@@ -491,33 +491,11 @@ function lib:Window(text, preset, closebind)
             local toggled = false
 
 
-            local Players = game:GetService("Players")
-local player = Players.LocalPlayer
-
--- Create ScreenGui
-local screenGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
-local textLabel = Instance.new("TextLabel", screenGui)
-
--- Set properties for the TextLabel
-textLabel.Size                   = UDim2.new(0, 400, 0, 100)
-textLabel.Position               = UDim2.new(0.5, -200, 0.4, -50)
-textLabel.Text                   = "NewID Library"
-textLabel.TextColor3             = Color3.new(50/255, 0, 0) -- Dark maroon
-textLabel.BackgroundTransparency = 1-- Make background transparent
-textLabel.TextScaled             = false -- Disable scaling for manual control
-textLabel.TextSize               = 100000000000 -- Initial size
-textLabel.Font                   = Enum.Font.SourceSansBold
-
--- Fade out effect
-for i = 0, 1, 0.05 do
-    textLabel.TextTransparency = i
-    textLabel.TextSize = 50 * (1 - i) -- Decrease font size
-    wait(0.06) -- Wait a bit for smoother fade
-end
-
--- Clean up
-screenGui:Destroy()
-
+            game:GetService("StarterGui"):SetCore("SendNotification",{
+                Title = "NewID", -- Required
+                Text = "NewID Library", -- Required
+                Icon = "rbxthumb://type=Asset&id=122626301914718&w=150&h=150" -- Optional
+            })
 
             local Toggle = Instance.new("TextButton")
             local ToggleCorner = Instance.new("UICorner")
