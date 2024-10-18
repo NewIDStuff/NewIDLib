@@ -1,4 +1,3 @@
--- NewIDLib.lua
 local NewIDLib = {}
 NewIDLib.Frame = {}
 
@@ -9,12 +8,25 @@ function NewIDLib.Frame.New()
 
     -- Create Frame
     local frame = Instance.new("Frame")
-    frame.Size = UDim2.new(0, 300, 0, 200)  -- Size of the frame
+    frame.Size = UDim2.new(0, 400, 0, 300)  -- Increased size of the frame
     frame.BackgroundColor3 = Color3.new(0, 0, 0) -- Black color
-    frame.Position = UDim2.new(0.5, -150, 0.5, -100) -- Centered on screen
+    frame.Position = UDim2.new(0.5, -200, 0.5, -150) -- Centered on screen
     frame.ZIndex = 10 -- Ensure it's on top
     frame.Visible = true -- Ensure visibility
     frame.Parent = screenGui  -- Parent the frame to the ScreenGui
+
+    -- Add rounded corners and shadow effect
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 12)  -- Rounded corners
+    corner.Parent = frame
+
+    local shadow = Instance.new("Frame")
+    shadow.Size = UDim2.new(1, 10, 1, 10)
+    shadow.BackgroundColor3 = Color3.new(0, 0, 0) -- Shadow color
+    shadow.Position = UDim2.new(0, -5, 0, -5)  -- Offset to create shadow effect
+    shadow.ZIndex = frame.ZIndex - 1 -- Place it behind the frame
+    shadow.BackgroundTransparency = 0.5 -- Slight transparency for shadow
+    shadow.Parent = frame
 
     print("Frame created:", frame)  -- Debug print to check frame creation
 
@@ -49,6 +61,18 @@ function NewIDLib.Frame.New()
     end)
 
     return frame
+end
+
+function NewIDLib.Frame.Outline(frame, color)
+    -- Create an outline around the frame
+    local outline = Instance.new("Frame")
+    outline.Size = UDim2.new(1, 6, 1, 6)  -- Size slightly larger than the frame
+    outline.BackgroundColor3 = color -- Set the outline color
+    outline.Position = UDim2.new(0, -3, 0, -3)  -- Center it around the frame
+    outline.ZIndex = frame.ZIndex - 1 -- Place it behind the frame
+    outline.Parent = frame.Parent -- Parent to the same ScreenGui
+
+    print("Outline added with color:", color)  -- Debug print to check outline creation
 end
 
 return NewIDLib
